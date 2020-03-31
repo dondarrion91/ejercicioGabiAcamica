@@ -18,8 +18,10 @@ function handleOnAlternarLista() {
  * muestra la cantidad de personas que estan en la lista
  */
 function handleOnCantidadPersonas() {
-
-    alert(`En la tabla hay ${personas.length} personas`);
+    
+    let tbodyNumber = document.getElementsByTagName("tbody")[0].childElementCount;
+    alert(`En la tabla hay ${tbodyNumber} personas`);
+    
 }
 
 
@@ -84,7 +86,7 @@ function handleOnBuscarPorNombre(nombre) {
         return elem.nombre.toLowerCase().includes(nombre.toLowerCase().trim());
     });
 
-
+    hasFilter= true;
     recargarLista(arrayResultante);
  
 
@@ -101,6 +103,7 @@ function handleOnLimpiarBusquedaPersona() {
     let busquedaNombre = document.getElementById("busquedaNombre");
     recargarLista(personas);
     busquedaNombre.value = "";
+    hasFilter=false;
 }
 
 
@@ -112,7 +115,7 @@ function handleOnLimpiarBusquedaPersona() {
 function handleOnEliminarPersona(id) {
     
     personas.map(elem => {
-        if(elem.id === parseInt(id)){
+        if(elem.id === parseInt(id) && confirm("Esta seguro de eliminar el usuario?")){
             personas.splice(personas.indexOf(elem),1);
         }
     })
@@ -130,9 +133,11 @@ function handleOnActualizarNombrePersona(id) {
     let newName = prompt("Nuevo nombre: ");
     
     personas.map(elem => {
-        if(elem.id === parseInt(id) && newName !== null && newName !== ""){
+
+        if(elem.id === parseInt(id) && newName !== null && newName !== "" && confirm("Esta seguro de hacer el cambio?")){
             personas[personas.indexOf(elem)].nombre = newName;
         }
+
     })
 
     recargarLista(personas);
