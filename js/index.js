@@ -1,5 +1,7 @@
 
 var personas = [];
+let hasFilter = false;
+
 
 /**
  * alterna la lista actualizada contra la lista
@@ -7,10 +9,19 @@ var personas = [];
  */
 function handleOnAlternarLista() {
     setTimeout(() => {
-        onCargarPersonas();
-        recargarLista(personas);
-        alert("La lista se ha actualizado");    
-    },3000)
+        console.log(hasFilter);
+        if(!hasFilter){
+            let filteredList = handleOnBuscarPorNombre(nombre);
+            recargarLista(filteredList);
+            alert("La lista se ha actualizado");
+            hasFilter = true;
+        }else{
+            recargarLista(personas);
+            alert("La lista se ha actualizado");
+            hasFilter = false;
+        }
+            
+    },5000)
 }
 
 
@@ -66,13 +77,13 @@ function handleOnEliminarUltimo() {
  */
 
 
-function handleOnBuscarPorNombre(nombre) {
+function handleOnBuscarPorNombre() {
     
     
     //let nombres = onCargarPersonas();
     
 
-    let arrayNombre = [];
+    let nombre = document.getElementById("busquedaNombre").value;
     // for(let i=0;i<nombres.length;i++ ){
     //     // nombre = "gabriel" nombreIngresado = "gabriel"
     //     // nombre = "gabriel soria" nombreIngresado = "soria"
@@ -88,7 +99,7 @@ function handleOnBuscarPorNombre(nombre) {
 
     hasFilter= true;
     recargarLista(arrayResultante);
- 
+    return arrayResultante;
 
 }
 
