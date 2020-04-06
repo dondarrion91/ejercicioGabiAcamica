@@ -7,17 +7,36 @@ let hasFilter = false;
  * alterna la lista actualizada contra la lista
  * original.
  */
+function handleOnListaEliminados(){
+    
+    if(!hasFilter){
+        let filteredList = JSON.parse(localStorage.getItem("eliminados"));
+        recargarLista(filteredList,() => {
+            alert("La lista se ha actualizado");
+        });
+        
+        hasFilter = true;
+    }
+    
+}
+
+
 function handleOnAlternarLista() {
     setTimeout(() => {
-        console.log(hasFilter);
+        
         if(!hasFilter){
             let filteredList = handleOnBuscarPorNombre(nombre);
-            recargarLista(filteredList);
-            alert("La lista se ha actualizado");
+            recargarLista(filteredList,() => {
+                alert("La lista se ha actualizado");
+            });
+            
             hasFilter = true;
         }else{
-            recargarLista(personas);
-            alert("La lista se ha actualizado");
+            console.log("object")
+            recargarLista(personas,() => {
+                alert("La lista se ha actualizado");
+            });
+            
             hasFilter = false;
         }
             
@@ -98,7 +117,9 @@ function handleOnBuscarPorNombre() {
     });
 
     hasFilter= true;
-    recargarLista(arrayResultante);
+    recargarLista(arrayResultante,() => {
+        alert("busqueda Filtrada");
+    });
     return arrayResultante;
 
 }
@@ -123,15 +144,29 @@ function handleOnLimpiarBusquedaPersona() {
  * pasando por parametro el id.
  * @param {number} idPersona 
  */
+if(!localStorage.getItem("eliminados")){
+    let listaEliminados = [];
+    localStorage.setItem("eliminados",JSON.stringify(listaEliminados));
+}else{
+    let listaEliminados = localStorage.getItem("eliminados");
+}
+
 function handleOnEliminarPersona(id) {
     
     personas.map(elem => {
         if(elem.id === parseInt(id) && confirm("Esta seguro de eliminar el usuario?")){
+            let listaEliminados = JSON.parse(localStorage.getItem("eliminados"));
+            console.log(listaEliminados);
+            listaEliminados.push(elem);
+            localStorage.setItem("eliminados",JSON.stringify(listaEliminados));
             personas.splice(personas.indexOf(elem),1);
+            
         }
     })
 
-    recargarLista(personas);
+    recargarLista(personas,() => {
+        console.log("callback")
+    });
     
 }
 
@@ -162,7 +197,7 @@ function handleOnActualizarNombrePersona(id) {
  * agrega a la lista de la pantalla.
  * @param {Array} personas 
  */
-function recargarLista(personas) {
+function recargarLista(personas,callback) {
     
 
 
@@ -215,8 +250,10 @@ function recargarLista(personas) {
         tdAccion.appendChild(button);
         tdAccion.appendChild(button2);
     }
-
+    
     table.replaceChild(tbodyNew, tbody);
+    
+    callback("Primera Carga");
 }
 
 
@@ -273,10 +310,16 @@ function onCargarPersonas() {
     personas = [persona1, persona2, persona3, persona4, persona5, persona6];
     
 
-    recargarLista(personas);
+    recargarLista(personas,string => {
+        alert(`${string}`);
+    });
 
     return personas;
+
+    
 }
+
+
 
 onCargarPersonas();
 
